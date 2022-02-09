@@ -33,7 +33,7 @@ class BoardApplicationTests {
 	@Test
 	public void testBySqlSessionFactory() {
 		try {
-			System.out.println("=========================");
+			System.out.println("==========================");
 			System.out.println(sessionFactory.toString());
 			System.out.println("=========================");
 
