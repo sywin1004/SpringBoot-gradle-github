@@ -5,16 +5,17 @@
 <mapper namespace="com.board.mapper.BoardMapper">
 	<!-- sql태그를 사용해 공통으로 사용되거나 반복적으로 사용되는 SQL 조각을 정의할 수 있다 -->
 	<sql id="boardColumns">
-		idx,
-		title,
-		writer,
-		view_cnt,
-		notice_yn,
-		secret_yn,
-		delete_yn,
-		insert_time,
-		update_time,
-		delete_time
+		  idx
+		, title
+		, content
+		, writer
+		, view_cnt
+		, notice_yn
+		, secret_yn
+		, delete_yn
+		, insert_time
+		, update_time
+		, delete_time
 	</sql>
 	<!-- *************************************** insertBoard ****************************************************** -->
 	<insert id="insertBoard" parameterType="BoardDTO">
@@ -26,8 +27,8 @@
 			, #{content}
 			, #{writer}
 			, 0
-			, IFNULL(#{noticeYn), 'N')
-			, IFNULL(#{secretYn), 'N')
+			, IFNULL(#{noticeYn}, 'N')
+			, IFNULL(#{secretYn}, 'N')
 			, 'N'
 			, NOW()
 			, NULL
@@ -63,7 +64,7 @@
 			  delete_yn = 'Y'
 			, delete_time = NOW()
 		WHERE
-			idx = {idx}
+			idx = #{idx}
 	</update>
 	
 	<!-- *************************************** selectBoardList ****************************************************** -->
