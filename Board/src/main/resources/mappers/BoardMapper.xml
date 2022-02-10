@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 쿼리문이 정의되어있는 XML mapper 파일 -->
+<!-- mapper의 네임 스페이스에 BoardMapper 클래스를 지정해 XML 파일과 인터페이스의 메소드를 매핑하기위해 지정 -->
 <mapper namespace="com.board.mapper.BoardMapper">
+	<!-- sql태그를 사용해 공통으로 사용되거나 반복적으로 사용되는 SQL 조각을 정의할 수 있다 -->
 	<sql id="boardColumns">
 		idx,
 		title,
@@ -13,7 +16,7 @@
 		update_time,
 		delete_time
 	</sql>
-	
+	<!-- *************************************** insertBoard ****************************************************** -->
 	<insert id="insertBoard" parameterType="BoardDTO">
 		INSERT INTO tb_board(
 			<include refid="boardColumns" />
@@ -32,6 +35,7 @@
 		)
 	</insert>
 	
+	<!-- *************************************** selectBoardDetail ****************************************************** -->
 	<select id="selectBoardDetail" parameterType="long" resultType="BoardDTO">
 		SELECT
 			<include refid="boardColumns" />
@@ -39,7 +43,51 @@
 		WHERE delete_yn = 'N' 
 		AND idx = #{idx}
 	</select>
-	
+	<!-- *************************************** update ****************************************************** -->
 	<update id="updateBoard" parameterType="BoardDTO">
+		UPDATE tb_board
+		SET
+			  update_time = NOW()
+			, title = #{title}
+			, content = #{content}
+			, notice_yn = IFNULL(#{noticeYn}, 'N')
+			, secret_yn = IFNULL(#{secretYn}, 'N')
+		WHERE
+			idx = #{idx}
 	</update>
+	<!-- *************************************** delete ****************************************************** -->
+	<!-- 진짜로 삭제하진 않고 update를 통해 보여주지않음 -->
+	<update id="deleteBoard" parameterType="long">
+		UPDATE tb_board
+		SET
+			  delete_yn = 'Y'
+			, delete_time = NOW()
+		WHERE
+			idx = {idx}
+	</update>
+	
+	<!-- *************************************** selectBoardList ****************************************************** -->
+	<select id="selectBoardList" parameterType="BoardDTO" resultType="BoardDTO">
+		SELECT
+			<include refid="boardColumns"/>
+		FROM
+			tb_board
+		WHERE
+			delete_yn = 'N'
+		ORDER BY
+			notice_yn ASC,
+			idx DESC,
+			insert_time DESC
+	</select>
+	
+	
+	<!-- *************************************** selectBoardTotalCount ****************************************************** -->
+	<select id="seelctBoardCount">
+		SELECT
+			COUNT(*)
+		FROM
+			tb_board
+		WHERE
+			delete_yn = 'N'
+	</select>
 </mapper>
